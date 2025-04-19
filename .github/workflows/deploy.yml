@@ -73,6 +73,11 @@ jobs:
             echo "APP_URL=https://tasks.saltandsun.life" >> $GITHUB_ENV
           fi
 
+      - name: Debug ECR Registry URL
+        run: |
+          echo "AWS_ECR_REGISTRY_URL: ${{ secrets.AWS_ECR_REGISTRY_URL }}"
+          echo "AWS_ECR_REGISTRY_APP: $AWS_ECR_REGISTRY_APP"
+
       - name: Build and Push Frontend Image
         env:
           NEXT_PUBLIC_API_URL: ${{ env.NEXT_PUBLIC_API_URL }}
@@ -80,6 +85,7 @@ jobs:
           API_URL: ${{ env.API_URL }}
           APP_URL: ${{ env.APP_URL }}
         run: |
+          echo "Building image with tag: $AWS_ECR_REGISTRY_APP:latest"
           docker build -t $AWS_ECR_REGISTRY_APP:latest -f app/Dockerfile app
           docker push $AWS_ECR_REGISTRY_APP:latest
 
