@@ -1,0 +1,1 @@
+ALTER TABLE "task_assignments" ALTER COLUMN "token" SET DATA TYPE text;
