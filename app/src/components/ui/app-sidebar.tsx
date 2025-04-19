@@ -27,6 +27,7 @@ export async function AppSidebar({
       </Sidebar>
     );
   } catch (error) {
+    console.log("error", error);
     // If there's an error, show only non-protected navigation
     return (
       <Sidebar collapsible="icon" {...props}>

@@ -1,7 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
-
-import { redirect } from "next/navigation";
 import AuthFormContent from "@/components/auth/content"
 
 export default async function AuthPage() {

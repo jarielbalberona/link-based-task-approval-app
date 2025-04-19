@@ -1,19 +1,15 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { appQueryClient } from "@/providers/react-query"
+
 import {
-  BadgeCheck,
   ChevronsUpDown,
-  CreditCard,
+  Link,
   LogOut,
   User,
 } from "lucide-react";
-import { useProfile } from "@/hooks/react-queries/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -29,12 +25,6 @@ import { useLogout } from "@/hooks/react-queries/auth";
 
 export function NavUser({ initialData: user }: any) {
   const { isMobile } = useSidebar();
-
-  const successCallback = () => {
-    appQueryClient.setQueryData(["profile"], undefined); // ✅ Instantly update UI
-    appQueryClient.removeQueries({ queryKey: ["profile"] }); // 🚀 Ensure it's cleared
-    appQueryClient.invalidateQueries({ queryKey: ["profile"] }); // 🔄 Trigger refetch if needed
-  };
 
   const logoutMutation = useLogout();
 
@@ -89,10 +79,10 @@ export function NavUser({ initialData: user }: any) {
           </DropdownMenu>
         ) : (
           <SidebarMenuButton asChild>
-            <a href="/tasks/auth" className="p-6">
+            <Link href="/tasks/auth" className="p-6">
               <User />
               <span className="text-base">Login</span>
-            </a>
+            </Link>
           </SidebarMenuButton>
         )}
       </SidebarMenuItem>

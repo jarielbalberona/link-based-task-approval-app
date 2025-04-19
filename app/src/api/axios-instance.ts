@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
 
 // Type definition for global cookies
 declare global {
-  var cookies: Record<string, string> | undefined;
+  let cookies: Record<string, string> | undefined;
 }
 
 axiosInstance.interceptors.request.use(

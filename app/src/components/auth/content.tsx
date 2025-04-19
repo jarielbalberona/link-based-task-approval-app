@@ -24,7 +24,6 @@ import {
 import { Button } from "@/components/ui/button";
 import useCsrf from "@/hooks/use-csrf";
 import { useLogin, useRegister } from "@/hooks/react-queries/auth";
-import { appQueryClient } from "@/providers/react-query"
 
 const AuthForm = ({ isSignIn }: { isSignIn: boolean }) => {
   useCsrf()
@@ -58,10 +57,10 @@ const AuthForm = ({ isSignIn }: { isSignIn: boolean }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "Jariel Balberona",
-      email: "jarielbalberona@gmail.com",
-      username: "frothymeow",
-      password: "Admin123!",
+      name: "",
+      email: "",
+      username: "",
+      password: "",
     },
   });
 
