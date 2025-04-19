@@ -3,8 +3,8 @@ import axios, { InternalAxiosRequestConfig, AxiosHeaders } from 'axios';
 // Create an Axios instance
 const axiosInstance = axios.create({
   baseURL: typeof window !== 'undefined'
-    ? process.env.NEXT_PUBLIC_API_URL || 'http://api.saltandsun.life'
-    : process.env.API_URL || 'http://api.saltandsun.life',
+    ? process.env.NEXT_PUBLIC_API_URL || 'https://api.saltandsun.life'
+    : process.env.API_URL || 'https://api.saltandsun.life',
   withCredentials: true,
 });
 
