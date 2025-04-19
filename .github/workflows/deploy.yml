@@ -54,8 +54,8 @@ jobs:
             echo "ECS_CLUSTER=dev-lbta-app-cluster" >> $GITHUB_ENV
             echo "ORIGIN_URL=https://tasks.saltandsun.life" >> $GITHUB_ENV
             echo "DATABASE_URL=${{ secrets.DATABASE_URL_DEV }}" >> $GITHUB_ENV
-            echo "AWS_ECR_REGISTRY_APP=${{ secrets.AWS_ECR_REGISTRY_URL }}/dev-${{ env.ECR_REPO_APP }}:latest" >> $GITHUB_ENV
-            echo "AWS_ECR_REGISTRY_API=${{ secrets.AWS_ECR_REGISTRY_URL }}/dev-${{ env.ECR_REPO_API }}:latest" >> $GITHUB_ENV
+            echo "AWS_ECR_REGISTRY_APP=${{ secrets.AWS_ECR_REGISTRY_URL }}/dev-${{ env.ECR_REPO_APP }}" >> $GITHUB_ENV
+            echo "AWS_ECR_REGISTRY_API=${{ secrets.AWS_ECR_REGISTRY_URL }}/dev-${{ env.ECR_REPO_API }}" >> $GITHUB_ENV
             echo "NEXT_PUBLIC_API_URL=https://api.saltandsun.life" >> $GITHUB_ENV
             echo "NEXT_PUBLIC_APP_URL=https://tasks.saltandsun.life" >> $GITHUB_ENV
             echo "API_URL=https://api.saltandsun.life" >> $GITHUB_ENV
@@ -65,8 +65,8 @@ jobs:
             echo "ECS_CLUSTER=prod-lbta-app-cluster" >> $GITHUB_ENV
             echo "ORIGIN_URL=https://tasks.saltandsun.life" >> $GITHUB_ENV
             echo "DATABASE_URL=${{ secrets.DATABASE_URL_PROD }}" >> $GITHUB_ENV
-            echo "AWS_ECR_REGISTRY_APP=${{ secrets.AWS_ECR_REGISTRY_URL }}/prod-${{ env.ECR_REPO_APP }}:latest" >> $GITHUB_ENV
-            echo "AWS_ECR_REGISTRY_API=${{ secrets.AWS_ECR_REGISTRY_URL }}/prod-${{ env.ECR_REPO_API }}:latest" >> $GITHUB_ENV
+            echo "AWS_ECR_REGISTRY_APP=${{ secrets.AWS_ECR_REGISTRY_URL }}/prod-${{ env.ECR_REPO_APP }}" >> $GITHUB_ENV
+            echo "AWS_ECR_REGISTRY_API=${{ secrets.AWS_ECR_REGISTRY_URL }}/prod-${{ env.ECR_REPO_API }}" >> $GITHUB_ENV
             echo "NEXT_PUBLIC_API_URL=https://api.saltandsun.ph" >> $GITHUB_ENV
             echo "NEXT_PUBLIC_APP_URL=https://tasks.saltandsun.life" >> $GITHUB_ENV
             echo "API_URL=https://api.saltandsun.ph" >> $GITHUB_ENV
@@ -80,8 +80,8 @@ jobs:
           API_URL: ${{ env.API_URL }}
           APP_URL: ${{ env.APP_URL }}
         run: |
-          docker build -t $AWS_ECR_REGISTRY_APP -f app/Dockerfile app
-          docker push $AWS_ECR_REGISTRY_APP
+          docker build -t $AWS_ECR_REGISTRY_APP:latest -f app/Dockerfile app
+          docker push $AWS_ECR_REGISTRY_APP:latest
 
       - name: Build and Push Backend Image
         env:
