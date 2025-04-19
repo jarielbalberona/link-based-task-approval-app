@@ -71,12 +71,11 @@ resource "aws_ecs_task_definition" "app" {
         }
       ]
       environment = [
-        { name = "ORIGIN_URL", value = "https://dev.lbta-app" },
-        { name = "API_URL", value = "https://api-dev.lbta-app" },
-        { name = "APP_URL", value = "https://dev.lbta-app" },
-        { name = "NEXT_PUBLIC_APP_URL", value = "https://dev.lbta-app" },
-        { name = "NEXT_PUBLIC_API_URL", value = "https://api-dev.lbta-app" },
-        { name = "NEXT_PUBLIC_GOOGLE_MAP_API", value = "AIzaSyCt8RQ54ZSo4Vh1EgUPQHQaYeB3P1oiRAQ" }
+        { name = "ORIGIN_URL", value = "https://tasks.saltandsun.life" },
+        { name = "API_URL", value = "https://api.saltandsun.life" },
+        { name = "APP_URL", value = "https://tasks.saltandsun.life" },
+        { name = "NEXT_PUBLIC_APP_URL", value = "https://tasks.saltandsun.life" },
+        { name = "NEXT_PUBLIC_API_URL", value = "https://api.saltandsun.life" },
       ]
       logConfiguration = {
         logDriver = "awslogs"
