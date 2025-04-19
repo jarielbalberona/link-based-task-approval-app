@@ -45,109 +45,6 @@ export default class AuthenticationService extends DrizzleService {
 		}
 	}
 
-	async createGoogleAccount(
-		userId: number,
-		data: GoogleUserProfile,
-		accessToken: string
-	): Promise<ServiceApiResponse<AuthenticationSchemaType>> {
-		try {
-			const createdGoogleAccount = await this.db
-				.insert(authentications)
-				.values({
-					userId,
-					type: "oauth",
-					provider: "google",
-					providerAccountId: data.id,
-					accessToken: accessToken,
-					refreshToken: null,
-					expiresAt: sessionTimeout,
-					tokenType: "access_token",
-					scope: "profile",
-					idToken: data.id,
-					sessionState: null
-				})
-				.returning();
-
-			return ServiceResponse.createResponse(
-				status.HTTP_201_CREATED,
-				"Google account created successfully",
-				createdGoogleAccount[0]
-			);
-		} catch (error) {
-			return ServiceResponse.createErrorResponse(error);
-		}
-	}
-
-	async createUserFromGoogle(
-		data: GoogleUserProfile,
-		accessToken: string
-	): Promise<ServiceApiResponse<Omit<UserSchemaType, "password">>> {
-		try {
-			const checkUserExistence = await this.db.query.users.findFirst({
-				where: eq(users.email, data._json.email!),
-				with: {
-					authentications: {
-						where: and(eq(authentications.providerAccountId, data.id), eq(authentications.provider, "google"))
-					}
-				}
-			});
-
-			// If user exists
-			if (checkUserExistence) {
-				// If user has a google account, update the access token
-				if (checkUserExistence.authentications.length > 0) {
-					await this.db
-						.update(authentications)
-						.set({ accessToken })
-						.where(eq(authentications.providerAccountId, data.id));
-
-					if (!checkUserExistence.emailVerified)
-						await this.accountVerification(checkUserExistence.id);
-
-					const { authentications: userAuthentications, ...user } = checkUserExistence;
-
-					return ServiceResponse.createResponse(
-						status.HTTP_200_OK,
-						"Google account updated successfully",
-						user
-					);
-				} else {
-					// If user does not have a google account, create one
-					await this.createGoogleAccount(checkUserExistence.id, data, accessToken);
-
-					const { authentications: userAuthentications, ...user } = checkUserExistence;
-
-					return ServiceResponse.createResponse(
-						status.HTTP_201_CREATED,
-						"Google account created successfully",
-						user
-					);
-				}
-			}
-
-			// If user does not exist, create a new user
-			const createdUser = await this.createUser({
-				name: data._json.name!,
-				email: data._json.email!,
-				username: data._json.email!.split("@")[0],
-				password: null,
-				emailVerified: new Date(),
-        image: data._json.picture!,
-        alias: null
-			});
-
-			// Create google account
-			await this.createGoogleAccount(createdUser.data?.id!, data, accessToken);
-
-			return ServiceResponse.createResponse(
-				status.HTTP_201_CREATED,
-				"User created successfully",
-				createdUser.data
-			);
-		} catch (error) {
-			return ServiceResponse.createErrorResponse(error);
-		}
-	}
 
 	async findUserByUsernameOrEmail(username: string): Promise<ServiceApiResponse<UserSchemaType>> {
 		try {
@@ -183,7 +80,7 @@ export default class AuthenticationService extends DrizzleService {
 	}
 
 	async findUserById(
-		id: number,
+		id: string,
 		withPassword: boolean = false
 	): Promise<ServiceApiResponse<UserSchemaType>> {
 		try {
@@ -324,55 +221,4 @@ export default class AuthenticationService extends DrizzleService {
 		}
 	}
 
-	async accountVerification(id: number): Promise<ServiceApiResponse<boolean>> {
-		try {
-			await this.db
-				.update(users)
-				.set({
-					emailVerified: new Date()
-				})
-				.where(eq(users.id, id));
-
-			return ServiceResponse.createResponse(status.HTTP_200_OK, "User verified", true);
-		} catch (error) {
-			return ServiceResponse.createErrorResponse(error);
-		}
-	}
-
-	async checkAccountVerification(id: number): Promise<ServiceApiResponse<boolean>> {
-		try {
-			const user = await this.findUserById(id);
-
-			if (!user.data?.emailVerified)
-				return ServiceResponse.createRejectResponse(
-					status.HTTP_400_BAD_REQUEST,
-					"User is not verified"
-				);
-
-			return ServiceResponse.createResponse(status.HTTP_200_OK, "User is verified", true);
-		} catch (error) {
-			return ServiceResponse.createErrorResponse(error);
-		}
-	}
-
-	async changePassword(id: number, newPassword: string): Promise<ServiceApiResponse<boolean>> {
-		try {
-			const hashedPassword = await bcryptjs.hash(newPassword, 10);
-
-			await this.db
-				.update(users)
-				.set({
-					password: hashedPassword
-				})
-				.where(eq(users.id, id));
-
-			return ServiceResponse.createResponse(
-				status.HTTP_200_OK,
-				"Password changed successfully",
-				true
-			);
-		} catch (error) {
-			return ServiceResponse.createErrorResponse(error);
-		}
-	}
 }

@@ -93,7 +93,7 @@ export default class UserService extends DrizzleService {
 		}
 	}
 
-	async deleteUserByIds(ids: number[]): Promise<ServiceApiResponse<boolean>> {
+	async deleteUserByIds(ids: string[]): Promise<ServiceApiResponse<boolean>> {
 		try {
 			await this.db.delete(users).where(inArray(users.id, ids));
 
