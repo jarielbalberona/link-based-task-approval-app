@@ -35,10 +35,10 @@ resource "aws_db_instance" "project_db" {
   identifier             = "${var.environment}-${var.aws_project_name}-rds"
   allocated_storage      = 20
   storage_type           = "gp2"
-  engine                 = "postgres" # Change to "mysql" if needed
-  engine_version         = "14"       # Change based on your requirement
+  engine                 = "postgres"
+  engine_version         = "14"
   instance_class         = "db.t3.micro"
-  db_name                = "lbta-app"
+  db_name                = "lbtaapp"
   username               = var.db_user
   password               = var.db_password
   parameter_group_name   = "default.postgres14"

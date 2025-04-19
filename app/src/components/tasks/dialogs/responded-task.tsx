@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 const RespondedTaskDialog = ({
   data,
 }: any) => {
-  console.log("data", data);
   if(!data) return null
   return (
     <Dialog

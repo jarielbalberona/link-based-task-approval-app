@@ -14,7 +14,6 @@ export default async function Profile() {
 
     return <ProfileContent initialData={data?.data || null} />;
   } catch (error) {
-    console.log('Profile error', error)
     // If there's an authentication error, redirect to login
     // redirect("/tasks/auth");
   }

@@ -20,7 +20,7 @@ A full-stack web application where managers can create tasks, assign them to use
 - **Frontend:** Next.js 14, React, Tailwind CSS
 - **Backend:** Express.js API
 - **Database:** PostgreSQL with Drizzle ORM
-- **Email Service:** SendGrid
+- **Email Service:** Resend
 - **Authentication:** Local Authentication
 - **Deployment:** AWS (ECS, RDS, Route53)
 - **Infrastructure:** Terraform
@@ -30,7 +30,7 @@ A full-stack web application where managers can create tasks, assign them to use
 ### Prerequisites
 - Node.js 18+
 - PostgreSQL
-- SendGrid Account
+- Resend API KEY
 - Terraform CLI
 
 ### Installation
@@ -41,31 +41,36 @@ git clone [repository-url]
 cd link-based-task-approval-app
 ```
 
-2. Install dependencies
-```bash
-npm install
-```
-
-3. Set up environment variables
+2. Set up environment variables
 Create a `.env` file with the following variables:
 ```env
-DATABASE_URL="postgresql://user:password@localhost:5432/task_approval"
-JWT_SECRET="your-secret-key"
-AWS_REGION="your-aws-region"
-AWS_ACCESS_KEY_ID="your-aws-access-key"
-AWS_SECRET_ACCESS_KEY="your-aws-secret-key"
-SENDGRID_API_KEY="your-sendgrid-api-key"
-SENDGRID_FROM_EMAIL="your-verified-sender@domain.com"
+DATABASE_URL=""
+PORT=""
+NODE_ENV=""
+SECRET=""
+JWT_COOKIE_NAME=""
+SESSION_COOKIE_NAME=""
+ORIGIN_URL=""
+APP_URL=""
+API_URL=""
+RESEND_EMAIL_KEY=""
+RESEND_EMAIL_FROM=""
+AWS_REGION=""
+AWS_ACCESS_KEY=""
+AWS_SECRET_KEY=""
+AWS_S3_FPH_BUCKET_NAME=""
+```
+
+3. Start the development server
+```bash
+docker compose up
 ```
 
 4. Run database migrations
 ```bash
-npm run db:migrate
-```
-
-5. Start the development server
-```bash
-npm run dev
+pnpm db:generate
+pnpm db:push
+pnpm db:seed
 ```
 
 ## 📝 Project Structure
@@ -95,35 +100,10 @@ The application is deployed on AWS using Terraform for infrastructure management
 - **ECS (Elastic Container Service)** – Hosts the Express.js API and Next.js frontend
 - **RDS (Relational Database Service)** – PostgreSQL database instance
 - **Route 53** – Domain management and DNS configuration
-- **SES (Simple Email Service)** – Email delivery service
+- **Resend (Email Service)** – Email delivery service
 - **VPC** – Network isolation and security
 - **ALB (Application Load Balancer)** – Traffic distribution
 - **CloudWatch** – Logging and monitoring
-
-## 📧 SendGrid Setup
-
-1. **Create SendGrid Account**
-   - Sign up at [SendGrid](https://signup.sendgrid.com/)
-   - Verify your email address
-
-2. **Create API Key**
-   - Go to Settings → API Keys
-   - Create a new API Key with "Full Access" or "Restricted Access" (Mail Send only)
-   - Save the API key securely
-
-3. **Verify Sender**
-   - Go to Settings → Sender Authentication
-   - Choose between:
-     - Single Sender Verification (quick setup)
-     - Domain Authentication (recommended for production)
-   - Follow the verification steps
-
-4. **Configure Email Templates**
-   - Go to Email API → Dynamic Templates
-   - Create templates for:
-     - Task Assignment
-     - Approval Request
-     - Task Status Updates
 
 ## 🤝 Contributing
 

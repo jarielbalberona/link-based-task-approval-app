@@ -1,5 +1,5 @@
 data "aws_route53_zone" "main" {
-  name         = var.project
+  name         = "saltandsun.life"
   private_zone = false
 }
 

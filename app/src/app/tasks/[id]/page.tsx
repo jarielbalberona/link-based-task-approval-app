@@ -1,6 +1,6 @@
 import { getTaskAPI } from "@/api/tasks";
-import { MessageSquare } from "lucide-react";
 import { cookies } from "next/headers";
+import TaskCard from "@/components/tasks/card"
 
 export default async function Task({
   params,
@@ -26,17 +26,7 @@ export default async function Task({
             <div className="container max-w-screen-lg px-4 mx-auto sm:px-6 lg:px-8">
               <div className="flex items-start space-x-4">
                 <div className="flex-1">
-                  <h2 className="mb-1 text-lg font-semibold text-foreground">
-                    {task.title}
-                  </h2>
-                  <p className="mb-2 text-sm text-muted-foreground line-clamp-2">
-                    {task.description}
-                  </p>
-                  <div className="flex items-center text-xs text-muted-foreground">
-                    <span>Posted by {task.createdByUser?.username || 'Unknown'}</span>
-                    <span className="mx-2">•</span>
-                    <span>{new Date(task.createdAt).toLocaleDateString()}</span>
-                  </div>
+                  <TaskCard data={task} />
                 </div>
               </div>
             </div>

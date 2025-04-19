@@ -51,10 +51,6 @@ variable "project_api_url" {
   description = "Project API URL"
   type        = string
 }
-variable "project_auth_domain_cognito" {
-  description = "Project Auth Domain"
-  type        = string
-}
 
 variable "project_app_domain" {
   description = "Project App Domain"

@@ -15,9 +15,6 @@ export default function TaskReview({ data, token }: any) {
   const [respondData, setRespondData] = useState(null);
   const updateTaskAssignmentStatusByTokenMutation =
     useUpdateTaskAssignmentStatusByToken();
-  console.log("TaskReview data", data);
-  console.log("TaskReview token", token);
-  console.log("TaskReview respondData", respondData);
   return (
     <>
       <Card className="max-w-[600px] mx-auto overflow-hidden shadow-none border-none">

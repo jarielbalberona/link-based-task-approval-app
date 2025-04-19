@@ -2,36 +2,19 @@ import { z } from "zod";
 
 import { validateEnum, validateString } from "@/validators/commonRules";
 
-export const googleEnvSchema = z.object({
-	GOOGLE_CLIENT_ID: validateString("GOOGLE_CLIENT_ID"),
-	GOOGLE_CLIENT_SECRET: validateString("GOOGLE_CLIENT_SECRET"),
-	GOOGLE_CALLBACK_URL: validateString("GOOGLE_CALLBACK_URL")
-});
-
-const emailEnvSchema = z.object({
-	EMAIL_SERVER_HOST: validateString("EMAIL_SERVER_HOST"),
-	EMAIL_SERVER_PORT: validateString("EMAIL_SERVER_PORT"),
-	EMAIL_SERVER_USER: validateString("EMAIL_SERVER_USER"),
-	EMAIL_SERVER_PASSWORD: validateString("EMAIL_SERVER_PASSWORD"),
-	EMAIL_FROM: validateString("EMAIL_FROM")
-});
 
 export const envSchema = z.object({
 	DATABASE_URL: validateString("DATABASE_URL"),
 	PORT: validateString("PORT").refine(value => !isNaN(Number(value)), "PORT must be a number"),
-	SECRET: validateString("SECRET"),
 	NODE_ENV: validateEnum("NODE_ENV", ["development", "production"]),
+	SECRET: validateString("SECRET"),
 	JWT_COOKIE_NAME: validateString("JWT_COOKIE_NAME"),
 	SESSION_COOKIE_NAME: validateString("SESSION_COOKIE_NAME"),
 	ORIGIN_URL: validateString("ORIGIN_URL"),
 	APP_URL: validateString("APP_URL"),
 	API_URL: validateString("API_URL"),
-	AWS_REGION: validateString("AWS_REGION"),
-	AWS_ACCESS_KEY: validateString("AWS_ACCESS_KEY"),
-  AWS_SECRET_KEY: validateString("AWS_SECRET_KEY"),
-	AWS_S3_FPH_BUCKET_NAME: validateString("AWS_S3_FPH_BUCKET_NAME"),
-	...googleEnvSchema.shape,
-	...emailEnvSchema.shape
+	RESEND_EMAIL_KEY: validateString("RESEND_EMAIL_KEY"),
+	RESEND_EMAIL_FROM: validateString("RESEND_EMAIL_FROM"),
 });
 
 const Env = envSchema.safeParse(process.env);
