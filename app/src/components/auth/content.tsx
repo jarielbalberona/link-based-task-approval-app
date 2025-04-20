@@ -75,8 +75,10 @@ const AuthForm = ({ isSignIn, setDefaultAuthTab }: { isSignIn: boolean, setDefau
       body.name = values.name;
       body.email = values.email;
       registerMutation.mutate(body, {
-        onSuccess: (data) => {
-          setDefaultAuthTab && setDefaultAuthTab()
+        onSuccess: () => {
+          if (setDefaultAuthTab) {
+            setDefaultAuthTab()
+          }
           toast.success("User created successfully. You may now login")
         },
         onError: (error) => {
@@ -85,7 +87,7 @@ const AuthForm = ({ isSignIn, setDefaultAuthTab }: { isSignIn: boolean, setDefau
       });
     } else {
       loginMutation.mutate(body, {
-        onSuccess: (data) => {
+        onSuccess: () => {
           toast.success("Login successful")
           appQueryClient.invalidateQueries({ queryKey: ["profile"] });
           router.push("/tasks")
