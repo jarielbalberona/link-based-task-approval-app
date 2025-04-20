@@ -3,7 +3,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return children;
+  return (
+    <html>
+      <body>
+        {children}
+      </body>
+    </html>
+  )
 }
 
 export const dynamic = "force-dynamic";
