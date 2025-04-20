@@ -20,10 +20,17 @@ import {
 } from "@/hooks/react-queries/tasks";
 import CreateEditTaskDialog from "./dialogs/create-edit-task";
 import { toast } from "sonner";
+import { useTask } from "@/hooks/react-queries/tasks"
+import { useParams } from "next/navigation";
+import { appQueryClient } from "@/providers/react-query";
+import { useRouter } from "next/navigation";
 
-const TaskCard = ({ task }: any) => {
+const TaskCard = ({ task: initialTask }: any) => {
+  const { id } = useParams()
+  const router = useRouter();
   const createTaskAssignmentMutation = useCreateTaskAssignment();
   const useDeleteTaskMutation = useDeleteTask();
+  const {data: task} = useTask(initialTask.id, initialTask);
 
   const [isConfirmDeleteDialogOpen, setIsConfirmDeleteDialogOpen] =
     useState(false);
@@ -36,14 +43,22 @@ const TaskCard = ({ task }: any) => {
         assigneeEmail: email,
       },
       {
-        onSuccess: () => toast.success("Task assigned successfully"),
+        onSuccess: () => {
+          toast.success("Task assigned successfully")
+          appQueryClient.invalidateQueries({ queryKey: ["task", task.id] });
+        }
       }
     );
   };
 
   const onDeleteTask = () => {
     useDeleteTaskMutation.mutate(task.id, {
-      onSuccess: () => toast.success("Task deleted successfully"),
+      onSuccess: () => {
+        toast.success("Task deleted successfully")
+        if (id) {
+          router.push("/tasks")
+        }
+      }
     });
   };
 
@@ -133,12 +148,16 @@ const TaskCard = ({ task }: any) => {
           </div>
         )}
 
-        <a
+        {
+          !id && (
+            <a
           href={`/tasks/${task.id}`}
           className="inline-block mt-2 text-sm text-primary hover:underline"
         >
           View Task Details
         </a>
+          )
+        }
       </CardContent>
       <CardFooter className="flex justify-between gap-2">
         {task?.assignment?.id ? (

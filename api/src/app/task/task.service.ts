@@ -41,30 +41,46 @@ export default class TaskService extends DrizzleService {
 
 	async retrieve(id: string): Promise<ServiceApiResponse<TaskSchemaType>> {
 		try {
-			const retrieveData = await this.db.query.tasks.findFirst({
-				where: eq(tasks.id, id),
-				with: {
-					creator: {
-						columns: {
-							id: true,
-							username: true,
-							email: true,
-						},
+			const retrieveData = await this.db
+				.select({
+					task: tasks,
+					user: {
+						id: users.id,
+						username: users.username,
+						email: users.email,
+						alias: users.alias,
 					},
-				},
-			});
+					assignment: {
+						id: taskAssignments.id,
+						assigneeEmail: taskAssignments.assigneeEmail,
+						status: taskAssignments.status,
+						respondedAt: taskAssignments.respondedAt,
+						expiresAt: taskAssignments.expiresAt,
+					}
+				})
+				.from(tasks)
+				.leftJoin(users, eq(tasks.createdBy, users.id))
+				.leftJoin(taskAssignments, eq(tasks.id, taskAssignments.taskId))
+				.where(eq(tasks.id, id));
 
-			if (!retrieveData) {
+			if (!retrieveData.length) {
 				return ServiceResponse.createRejectResponse(
 					status.HTTP_404_NOT_FOUND,
 					"Task not found"
 				);
 			}
 
+			// Flatten the result
+			const flattened = {
+				...retrieveData[0].task,
+				createdByUser: retrieveData[0].user,
+				assignment: retrieveData[0].assignment || null,
+			};
+
 			return ServiceResponse.createResponse(
 				status.HTTP_200_OK,
 				"Task retrieved successfully",
-				retrieveData
+				flattened
 			);
 		} catch (error) {
 			return ServiceResponse.createErrorResponse(error);

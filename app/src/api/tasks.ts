@@ -20,7 +20,7 @@ export const deleteTaskAPI = async (taskId: string): Promise<any> => {
   return data.data || null;
 };
 
-export const getTaskAPI = async (taskId: string, _queryContext?: any, headers?: any): Promise<any> => {
+export const getTaskAPI = async (taskId: string, headers?: any): Promise<any> => {
   const { data } = await axiosInstance.get(`/tasks/${taskId}`, { headers });
   return data.data || null;
 };
