@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import DrizzleService from "@/databases/drizzle/service";
 import { tasks, taskAssignments } from "@/models/drizzle/task.model";
 import { ServiceResponse } from "@/utils/serviceApi";
-import { sendTaskApprovalEmail } from "@/service/emailService";
+import { sendTaskApprovalEmail, sendTaskRespondConfirmationEmail, sendTaskRespondStatusEmail } from "@/service/emailService";
 import { status } from "@/utils/statusCodes";
 
 export type TaskAssignmentSchemaType = InferSelectModel<typeof taskAssignments>;
