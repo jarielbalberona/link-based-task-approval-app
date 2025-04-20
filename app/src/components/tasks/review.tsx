@@ -11,8 +11,10 @@ import {
 import { useUpdateTaskAssignmentStatusByToken } from "@/hooks/react-queries/tasks";
 import RespondedTaskDialog from "@/components/tasks/dialogs/responded-task";
 import LoadingOverlay from "@/components/ui/loading-overlay"
+import useCsrf from "@/hooks/use-csrf";
 
 export default function TaskReview({ data, token }: any) {
+  useCsrf()
   const [respondData, setRespondData] = useState(null);
   const { mutate, isPending } = useUpdateTaskAssignmentStatusByToken();
 
