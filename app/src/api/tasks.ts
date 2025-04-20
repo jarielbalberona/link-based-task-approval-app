@@ -1,9 +1,26 @@
 import axiosInstance from './axios-instance';
 
-export const getTasksAPI = async (_queryContext?: any, headers?: any): Promise<any> => {
-  const { data } = await axiosInstance.get('/tasks', { headers });
-  return data.data || null;
+
+export const getTasksAPI = async (_queryContext?: any, headers?: any): Promise<{ data: any; status: number; message: string }> => {
+  try {
+    const response = await axiosInstance.get('/tasks', { headers });
+    const { data } = response;
+    return {
+      data: data.data || null,
+      status: response.status,
+      message: data.message || 'Success',
+    };
+  } catch (error: any) {
+    const errData = error.response?.data || {};
+    return {
+      data: null,
+      status: error.response?.status || 500,
+      message: errData.message || 'An error occurred',
+    };
+  }
 };
+
+
 
 export const createTaskAPI = async (task: any): Promise<any> => {
   const { data } = await axiosInstance.post('/tasks', task);

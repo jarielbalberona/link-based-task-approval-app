@@ -1,26 +1,32 @@
 "use client";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 
 import { Input } from "@/components/ui/input";
 import { useTasks } from "@/hooks/react-queries/tasks";
-
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import useCsrf from "@/hooks/use-csrf";
 import CreateEditTaskDialog from "@/components/tasks/dialogs/create-edit-task";
-import TaskCard from "./card"
+import TaskCard from "./card";
+import { useRouter } from "next/navigation";
 
 const Tasks = ({ initialTasks }: any) => {
   useCsrf();
-  const { data: tasks }: any = useTasks(initialTasks);
+  const router = useRouter();
+  const { data: results }: any = useTasks(initialTasks);
   const [searchQuery, setSearchQuery] = useState("");
+  useEffect(() => {
+    if ((results?.status === 401 || results?.status === 403) && !results.data) {
+      router.push("/tasks/auth");
+    }
+    }, [results, router]);
 
-
-  if (!tasks) {
+  if (!results.data) {
     return <div>No Tasks!</div>;
   }
+
+  const tasks = results.data;
 
   const unAssignedTasks = tasks.filter(
     (task: any) =>
@@ -65,8 +71,7 @@ const Tasks = ({ initialTasks }: any) => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <CreateEditTaskDialog
-          />
+          <CreateEditTaskDialog />
         </div>
       </div>
       <Tabs defaultValue="unAssigned" className="w-full">
@@ -89,10 +94,7 @@ const Tasks = ({ initialTasks }: any) => {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {unAssignedTasks.length > 0 ? (
                 unAssignedTasks.map((task: any) => (
-                  <TaskCard
-                    key={task.id}
-                    task={task}
-                  />
+                  <TaskCard key={task.id} task={task} />
                 ))
               ) : (
                 <div className="py-10 text-center col-span-full text-muted-foreground">
@@ -105,10 +107,7 @@ const Tasks = ({ initialTasks }: any) => {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {sentTasks.length > 0 ? (
                 sentTasks.map((task: any) => (
-                  <TaskCard
-                    key={task.id}
-                    task={task}
-                  />
+                  <TaskCard key={task.id} task={task} />
                 ))
               ) : (
                 <div className="py-10 text-center col-span-full text-muted-foreground">
@@ -121,10 +120,7 @@ const Tasks = ({ initialTasks }: any) => {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {approvedTasks.length > 0 ? (
                 approvedTasks.map((task: any) => (
-                  <TaskCard
-                    key={task.id}
-                    task={task}
-                  />
+                  <TaskCard key={task.id} task={task} />
                 ))
               ) : (
                 <div className="py-10 text-center col-span-full text-muted-foreground">
@@ -137,10 +133,7 @@ const Tasks = ({ initialTasks }: any) => {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {RejectedTasks.length > 0 ? (
                 RejectedTasks.map((task: any) => (
-                  <TaskCard
-                    key={task.id}
-                    task={task}
-                  />
+                  <TaskCard key={task.id} task={task} />
                 ))
               ) : (
                 <div className="py-10 text-center col-span-full text-muted-foreground">
@@ -154,7 +147,5 @@ const Tasks = ({ initialTasks }: any) => {
     </>
   );
 };
-
-
 
 export default Tasks;
