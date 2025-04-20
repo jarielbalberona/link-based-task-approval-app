@@ -38,11 +38,11 @@ export const taskRouter: Router = (() => {
 		});
 	router
 		.route("/assignment/:token")
-		.get(authenticationMiddleware, (req, res) => {
+		.get((req, res) => {
 			new TaskAssignmentController(req, res).getAssignmentByToken();
     })
-    .put(authenticationMiddleware, (req, res) => {
+    .put((req, res) => {
 			new TaskAssignmentController(req, res).updateAssignmentByToken();
-		})
+		});
 	return router;
 })();

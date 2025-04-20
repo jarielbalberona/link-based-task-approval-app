@@ -1,8 +1,12 @@
+"use client"
+
+import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
 import AuthFormContent from "@/components/auth/content"
 
-export default async function AuthPage() {
+export default function AuthPage() {
+  const [defaultAuthTab, setDefaultAuthTab] = useState('signin')
   // TODO: check if user is authenticated and redirect to home page
   return (
     <div className="flex flex-col flex-1 min-h-full px-6 py-12 mt-6 lg:px-8">
@@ -16,16 +20,16 @@ export default async function AuthPage() {
             className="w-auto mx-auto rounded-md"
           />
         </div>
-        <Tabs defaultValue="account" className="w-[400px]">
+        <Tabs value={defaultAuthTab} className="w-[400px]">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="account">Sign in</TabsTrigger>
-            <TabsTrigger value="password">Sign up</TabsTrigger>
+            <TabsTrigger onClick={() => setDefaultAuthTab('signin')} value="signin">Sign in</TabsTrigger>
+            <TabsTrigger onClick={() => setDefaultAuthTab('signup')} value="signup">Sign up</TabsTrigger>
           </TabsList>
-          <TabsContent value="account">
+          <TabsContent value="signin">
             <AuthFormContent isSignIn={true} />
           </TabsContent>
-          <TabsContent value="password">
-            <AuthFormContent isSignIn={false} />
+          <TabsContent value="signup">
+            <AuthFormContent setDefaultAuthTab={() => setDefaultAuthTab('signin')} isSignIn={false} />
           </TabsContent>
         </Tabs>
       </div>

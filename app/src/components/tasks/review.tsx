@@ -44,7 +44,11 @@ export default function TaskReview({ data, token }: any) {
 
             <p className="mb-1">
               <span className="font-semibold">Invite expiry date: </span>
-              {new Date(data.expiresAt).toLocaleDateString()}
+              {new Date(data.expiresAt).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+              })}
             </p>
             <p className="mb-0">
               <span className="font-semibold">Assigned By: </span>

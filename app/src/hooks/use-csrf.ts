@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "@/api/axios-instance";
+import { CSRFTokenAPI } from "@/api/auth";
 
 export default function useCsrf() {
   const [csrfToken, setCsrfToken] = useState("");
@@ -7,10 +7,11 @@ export default function useCsrf() {
   useEffect(() => {
     const fetchCsrfToken = async () => {
       try {
-        const response = await axios.get("/csrf-token");
-        const token = response.data.data;
-        setCsrfToken(token);
-        localStorage.setItem('_csrfToken', token);
+        const token = await CSRFTokenAPI();
+        if (token) {
+          setCsrfToken(token);
+          localStorage.setItem('_csrfToken', token);
+        }
       } catch (error) {
         console.error("Error fetching CSRF token:", error);
       }
