@@ -68,7 +68,7 @@ resource "aws_ecs_task_definition" "api" {
         hostPort      = 4000
       }]
       environment = [
-        { name = "DATABASE_URL", value = "postgres://lbtaappuser:lbtaapppw@dev-lbta-app-rds.cji8vqdamzfa.ap-southeast-1.rds.amazonaws.com/lbtaapp" },
+        { name = "DATABASE_URL", value = "postgresql://${var.module_rds_db_user}:${var.module_rds_db_password}@${var.module_rds_endpoint}/${var.module_rds_db_name}?sslmode=require" },
         { name = "PORT", value = "4000" },
         { name = "NODE_ENV", value = "development" },
         { name = "SECRET", value = "secretcsrflbta-app" },
@@ -107,6 +107,9 @@ resource "aws_ecs_service" "api" {
   task_definition = aws_ecs_task_definition.api.arn
   desired_count   = 1
   launch_type     = "FARGATE"
+
+  health_check_grace_period_seconds = 60
+
   network_configuration {
     subnets          = [var.module_networking_subnet1_id, var.module_networking_subnet2_id]
     security_groups  = [var.module_networking_ecs_api_sg_id]

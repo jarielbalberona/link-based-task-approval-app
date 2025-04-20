@@ -26,6 +26,10 @@ module "ecs" {
   module_rds_aws_security_group               = module.rds.aws_security_group
   module_rds_aws_security_group_id            = module.rds.aws_security_group_id
   module_networking_alb_sg_id                 = module.networking.alb_sg_id
+  module_rds_db_user                          = var.db_user
+  module_rds_db_password                      = var.db_password
+  module_rds_db_name                          = var.db_name
+  module_rds_endpoint                         = module.rds.endpoint
 }
 
 module "rds" {
@@ -40,6 +44,7 @@ module "rds" {
   db_user                      = var.db_user
   db_password                  = var.db_password
 }
+
 
 module "route53" {
   source                            = "../../modules/route53"
