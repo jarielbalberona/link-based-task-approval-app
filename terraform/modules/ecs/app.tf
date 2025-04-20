@@ -97,6 +97,8 @@ resource "aws_ecs_service" "app_service" {
   task_definition = aws_ecs_task_definition.app.arn
   launch_type     = "FARGATE"
 
+  health_check_grace_period_seconds = 60
+
   network_configuration {
     subnets          = [var.module_networking_subnet1_id, var.module_networking_subnet2_id]
     security_groups  = [var.module_networking_ecs_app_sg_id]

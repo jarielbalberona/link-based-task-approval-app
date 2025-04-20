@@ -1,4 +1,3 @@
-
 # VPC
 resource "aws_vpc" "main" {
 
@@ -237,6 +236,16 @@ resource "aws_lb_target_group" "app_tg" {
   protocol    = "HTTP"
   vpc_id      = aws_vpc.main.id
   target_type = "ip"
+
+  health_check {
+    path                = "/api/health"  # Health check endpoint
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
+    matcher            = "200"  # HTTP 200 response indicates healthy
+  }
+
   tags = {
     Name = "${var.environment}-${var.aws_project_name}-app-tg"
   }
