@@ -68,7 +68,7 @@ resource "aws_ecs_task_definition" "api" {
         hostPort      = 4000
       }]
       environment = [
-        { name = "DATABASE_URL", value = "postgresql://${var.module_rds_db_user}:${var.module_rds_db_password}@${var.module_rds_endpoint}/${var.module_rds_db_name}?sslmode=require" },
+        { name = "DATABASE_URL", value = "postgresql://${var.module_rds_db_user}:${var.module_rds_db_password}@${var.module_rds_endpoint}/${var.module_rds_db_name}" },
         { name = "PORT", value = "4000" },
         { name = "NODE_ENV", value = "development" },
         { name = "SECRET", value = "secretcsrflbta-app" },

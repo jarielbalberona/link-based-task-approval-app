@@ -139,7 +139,15 @@ resource "aws_security_group" "ecs_api_sg" {
     security_groups = [aws_security_group.alb_sg.id] # ALB security group
   }
 
-  # Allow Express API to access external resources (DB, S3, etc.)
+  # Allow Express API to access RDS
+  egress {
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
+    security_groups = [var.module_rds_aws_security_group_id] # RDS security group
+  }
+
+  # Allow Express API to access external resources (S3, etc.)
   egress {
     from_port   = 0
     to_port     = 0

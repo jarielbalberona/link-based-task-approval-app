@@ -6,6 +6,7 @@ module "networking" {
   project_app_domain                      = var.project_app_domain
   project_api_domain                      = var.project_api_domain
   module_route53_acm_certificate_ssl_cert = module.route53.acm_certificate_ssl_cert_arn
+  module_rds_aws_security_group_id = module.rds.aws_security_group_id
 }
 
 module "ecs" {
@@ -43,6 +44,7 @@ module "rds" {
   module_networking_subnet2_id = module.networking.subnet2_id
   db_user                      = var.db_user
   db_password                  = var.db_password
+  module_networking_ecs_api_sg_id = module.networking.ecs_api_sg_id
 }
 
 
