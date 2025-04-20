@@ -3,7 +3,6 @@ name: Deploy FPH
 on:
   push:
     branches:
-      - main
       - dev
 
 jobs:
