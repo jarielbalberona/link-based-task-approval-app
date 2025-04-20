@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { appQueryClient } from "@/providers/react-query";
-import { createTaskAPI, createTaskAssignmentAPI, deleteTaskAPI, getTaskAssignmentAPI, getTaskAssignmentsAPI, getTasksAPI, updateTaskAPI, updateTaskAssignmentAPI, updateTaskAssignmentStatusByTokenAPI } from "@/api/tasks";
+import { createTaskAPI, createTaskAssignmentAPI, deleteTaskAPI, getTaskAssignmentsAPI, getTasksAPI, updateTaskAPI, updateTaskAssignmentAPI, updateTaskAssignmentStatusByTokenAPI } from "@/api/tasks";
 
 export function useTasks(initialTasks?: any) {
   return useQuery({

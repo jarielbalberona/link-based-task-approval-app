@@ -61,36 +61,31 @@ resource "aws_ecs_task_definition" "api" {
 
   container_definitions = jsonencode([
     {
-      name  = "${var.environment}-${var.aws_project_name}-api",
-      image = "${aws_ecr_repository.api.repository_url}:latest",
+      name  = "${var.environment}-${var.aws_project_name}-api"
+      image = "${aws_ecr_repository.api.repository_url}:latest"
       portMappings = [{
-        containerPort = 4000,
+        containerPort = 4000
         hostPort      = 4000
       }]
       environment = [
-        { name = "DATABASE_URL", value = "postgres://fphbuddies:bPZ6SdIth7@dev-lbta-app-rds.cji8vqdamzfa.ap-southeast-1.rds.amazonaws.com" },
-        { name = "DATABASE_NAME", value = "lbta-app" },
+        { name = "DATABASE_URL", value = "postgresql://${var.module_rds_db_user}:${var.module_rds_db_password}@${var.module_rds_endpoint}/${var.module_rds_db_name}" },
         { name = "PORT", value = "4000" },
         { name = "NODE_ENV", value = "development" },
         { name = "SECRET", value = "secretcsrflbta-app" },
         { name = "JWT_COOKIE_NAME", value = "jwtauthlbta-app" },
         { name = "SESSION_COOKIE_NAME", value = "sessauthlbta-app" },
-        { name = "ORIGIN_URL", value = "https://dev.lbta-app" },
-        { name = "APP_URL", value = "https://dev.lbta-app" },
-        { name = "API_URL", value = "https://api-dev.lbta-app" },
-        { name = "GOOGLE_CLIENT_ID", value = "test" },
-        { name = "GOOGLE_CLIENT_SECRET", value = "test" },
-        { name = "GOOGLE_CALLBACK_URL", value = "test" },
-        { name = "EMAIL_SERVER_HOST", value = "test" },
-        { name = "EMAIL_SERVER_USER", value = "test" },
-        { name = "EMAIL_SERVER_PASSWORD", value = "test" },
-        { name = "EMAIL_SERVER_PORT", value = "test" },
-        { name = "EMAIL_FROM", value = "test" },
-        { name = "AWS_REGION", value = "ap-southeast-1" },
-        { name = "AWS_ACCESS_KEY", value = "AKIAXCSMC4SDJIG7P55L" },
-        { name = "AWS_SECRET_KEY", value = "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" },
-        { name = "AWS_S3_FPH_BUCKET_NAME", value = "dev.lbta-app-media" },
-
+        { name = "ORIGIN_URL", value = "https://tasks.saltandsun.life" },
+        { name = "APP_URL", value = "https://tasks.saltandsun.life" },
+        { name = "API_URL", value = "https://api.saltandsun.life" },
+        { name = "RESEND_EMAIL_KEY", value = "re_MWcm3XnE_MPLJ8MbwpGZiAoXjmefHNu1X" },
+        { name = "RESEND_EMAIL_FROM", value = "jariel@saltandsun.life" },
+        { name = "NEXT_PUBLIC_API_URL", value = "https://api.saltandsun.life" },
+        { name = "NEXT_PUBLIC_APP_URL", value = "https://tasks.saltandsun.life" },
+        { name = "NEXT_TELEMETRY_DISABLED", value = "1" },
+        { name = "NEXT_RUNTIME", value = "nodejs" },
+        { name = "NEXT_SHARP_PATH", value = "/tmp/node_modules/sharp" },
+        { name = "NEXT_PUBLIC_SECURITY_HEADERS", value = "true" },
+        { name = "NEXT_PUBLIC_CACHE_CONTROL", value = "public, max-age=31536000, immutable" }
       ]
       logConfiguration = {
         logDriver = "awslogs"
@@ -112,10 +107,13 @@ resource "aws_ecs_service" "api" {
   task_definition = aws_ecs_task_definition.api.arn
   desired_count   = 1
   launch_type     = "FARGATE"
+
+  health_check_grace_period_seconds = 60
+
   network_configuration {
     subnets          = [var.module_networking_subnet1_id, var.module_networking_subnet2_id]
     security_groups  = [var.module_networking_ecs_api_sg_id]
-    assign_public_ip = true
+    assign_public_ip = false
   }
 
   load_balancer {

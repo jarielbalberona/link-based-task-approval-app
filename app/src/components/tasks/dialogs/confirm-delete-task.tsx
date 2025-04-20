@@ -40,7 +40,7 @@ const CreateTaskDialog = ({
           >
             Cancel
           </Button>
-          <Button onClick={handleDeleteTask}>Delete Task</Button>
+          <Button variant="destructive" onClick={handleDeleteTask}>Delete Task</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

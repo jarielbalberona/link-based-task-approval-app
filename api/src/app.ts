@@ -9,7 +9,6 @@ import path from "path";
 import { corsOptions } from "@/cors";
 import analysis from "@/databases/drizzle/analysis";
 import appLogger from "@/logger";
-// import "@/passport/passportGoogle";
 import "@/passport/passportLocal";
 import appRateLimiter from "@/rateLimiter";
 import indexRouter from "@/routes/index.route";
@@ -40,7 +39,7 @@ appLogger(app);
  * This will limit the number of requests to the server
  * This is to prevent abuse of the server
  */
-// appRateLimiter(app);
+appRateLimiter(app);
 
 /**
  * Initialize session

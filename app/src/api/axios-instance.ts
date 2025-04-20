@@ -3,14 +3,14 @@ import axios, { InternalAxiosRequestConfig, AxiosHeaders } from 'axios';
 // Create an Axios instance
 const axiosInstance = axios.create({
   baseURL: typeof window !== 'undefined'
-    ? process.env.NEXT_PUBLIC_API_URL || 'https://api-dev.lbta-app'
-    : process.env.API_URL || 'https://api-dev.lbta-app',
+    ? process.env.NEXT_PUBLIC_API_URL || 'https://api.saltandsun.life'
+    : process.env.API_URL || 'https://api.saltandsun.life',
   withCredentials: true,
 });
 
 // Type definition for global cookies
 declare global {
-  var cookies: Record<string, string> | undefined;
+  let cookies: Record<string, string> | undefined;
 }
 
 axiosInstance.interceptors.request.use(

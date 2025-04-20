@@ -24,9 +24,10 @@ import {
 import { Button } from "@/components/ui/button";
 import useCsrf from "@/hooks/use-csrf";
 import { useLogin, useRegister } from "@/hooks/react-queries/auth";
-import { appQueryClient } from "@/providers/react-query"
+import { toast } from "sonner";
+import { appQueryClient } from "@/providers/react-query";
 
-const AuthForm = ({ isSignIn }: { isSignIn: boolean }) => {
+const AuthForm = ({ isSignIn, setDefaultAuthTab }: { isSignIn: boolean, setDefaultAuthTab?: any }) => {
   useCsrf()
   const router = useRouter();
   const loginMutation = useLogin();
@@ -58,10 +59,10 @@ const AuthForm = ({ isSignIn }: { isSignIn: boolean }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "Jariel Balberona",
-      email: "jarielbalberona@gmail.com",
-      username: "frothymeow",
-      password: "Admin123!",
+      name: "",
+      email: "",
+      username: "",
+      password: "",
     },
   });
 
@@ -74,11 +75,25 @@ const AuthForm = ({ isSignIn }: { isSignIn: boolean }) => {
       body.name = values.name;
       body.email = values.email;
       registerMutation.mutate(body, {
-        onSuccess: () => router.push("/tasks/auth")
+        onSuccess: (data) => {
+          setDefaultAuthTab && setDefaultAuthTab()
+          toast.success("User created successfully. You may now login")
+        },
+        onError: (error) => {
+          toast.error(error.message)
+        }
       });
     } else {
       loginMutation.mutate(body, {
-        onSuccess: () => router.push("/tasks")
+        onSuccess: (data) => {
+          toast.success("Login successful")
+          appQueryClient.invalidateQueries({ queryKey: ["profile"] });
+          router.push("/tasks")
+        },
+        onError: (error) => {
+          console.log("data error", error)
+          toast.error(error.message)
+        }
       });
     }
   };
@@ -219,6 +234,5 @@ const AuthForm = ({ isSignIn }: { isSignIn: boolean }) => {
     </Form>
   );
 };
-
 
 export default AuthForm;

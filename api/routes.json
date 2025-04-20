@@ -21,23 +21,7 @@
   },
   {
     "method": "POST",
-    "path": "/auth/request-otp"
-  },
-  {
-    "method": "POST",
     "path": "/auth/login"
-  },
-  {
-    "method": "POST",
-    "path": "/auth/login/otp"
-  },
-  {
-    "method": "GET",
-    "path": "/auth/login/google"
-  },
-  {
-    "method": "GET",
-    "path": "/auth/google/callback"
   },
   {
     "method": "POST",
@@ -49,23 +33,7 @@
   },
   {
     "method": "POST",
-    "path": "/auth/reset-password"
-  },
-  {
-    "method": "POST",
-    "path": "/auth/reset-password/confirm"
-  },
-  {
-    "method": "POST",
-    "path": "/auth/change-password"
-  },
-  {
-    "method": "POST",
     "path": "/auth/logout"
-  },
-  {
-    "method": "GET",
-    "path": "/auth/google"
   },
   {
     "method": "GET",

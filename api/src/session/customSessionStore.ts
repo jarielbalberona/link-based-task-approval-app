@@ -46,7 +46,7 @@ export default class DrizzleSessionStore extends Store {
 			const expire = session.cookie.expires || new Date(Date.now() + sessionTimeout);
 
 			// get session user from cookie
-			const userId = session?.passport?.user || null;
+			const userId = session?.passport?.user?.toString() || null;
 
 			await db
 				.insert(sessions)

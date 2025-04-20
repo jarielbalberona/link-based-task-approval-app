@@ -1,38 +1,27 @@
 import * as React from "react";
 import { cookies } from "next/headers";
-import { getMeAPI } from "@/api/auth"
+import { getMeAPI } from "@/api/auth";
 
-import {
-  Sidebar,
-} from "@/components/ui/sidebar";
+import { Sidebar } from "@/components/ui/sidebar";
 import { AppSidebarContent } from "./app-sidebar-content";
 
 export async function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
-
-  try {
-    const cookieStore = await cookies();
-    const data = await getMeAPI(undefined, {
-    Cookie: await cookieStore.toString()
+  const cookieStore = await cookies();
+  const data = await getMeAPI(undefined, {
+    Cookie: await cookieStore.toString(),
   });
-
-    if (!data) throw new Error("User not found");
-
+  if (!data) {
     return (
       <Sidebar collapsible="icon" {...props}>
-        <AppSidebarContent
-          data={data || null}
-        />
+        <AppSidebarContent data={data || null} />
       </Sidebar>
     );
-  } catch (error) {
-    // If there's an error, show only non-protected navigation
+  } else {
     return (
       <Sidebar collapsible="icon" {...props}>
-        <AppSidebarContent
-          data={null}
-        />
+        <AppSidebarContent data={null} />
       </Sidebar>
     );
   }

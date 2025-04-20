@@ -41,6 +41,10 @@ variable "db_password" {
   description = "RDS Database password"
   type        = string
 }
+variable "db_name" {
+  description = "RDS Database name"
+  type        = string
+}
 
 variable "project_app_url" {
   description = "Project APP URL"
@@ -49,10 +53,6 @@ variable "project_app_url" {
 
 variable "project_api_url" {
   description = "Project API URL"
-  type        = string
-}
-variable "project_auth_domain_cognito" {
-  description = "Project Auth Domain"
   type        = string
 }
 

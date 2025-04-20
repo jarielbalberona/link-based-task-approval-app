@@ -1,8 +1,9 @@
-
 # VPC
 resource "aws_vpc" "main" {
 
   cidr_block = "10.0.0.0/16"
+  enable_dns_support   = true
+  enable_dns_hostnames = true
   tags = {
     Name = "${var.environment}-${var.aws_project_name}-vpc"
   }
@@ -138,7 +139,15 @@ resource "aws_security_group" "ecs_api_sg" {
     security_groups = [aws_security_group.alb_sg.id] # ALB security group
   }
 
-  # Allow Express API to access external resources (DB, S3, etc.)
+  # Allow Express API to access RDS
+  egress {
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
+    security_groups = [var.module_rds_aws_security_group_id] # RDS security group
+  }
+
+  # Allow Express API to access external resources (S3, etc.)
   egress {
     from_port   = 0
     to_port     = 0
@@ -235,6 +244,16 @@ resource "aws_lb_target_group" "app_tg" {
   protocol    = "HTTP"
   vpc_id      = aws_vpc.main.id
   target_type = "ip"
+
+  health_check {
+    path                = "/api/health"  # Health check endpoint
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
+    matcher            = "200"  # HTTP 200 response indicates healthy
+  }
+
   tags = {
     Name = "${var.environment}-${var.aws_project_name}-app-tg"
   }
