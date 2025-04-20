@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import DrizzleService from "@/databases/drizzle/service";
 import { tasks, taskAssignments } from "@/models/drizzle/task.model";
 import { ServiceResponse } from "@/utils/serviceApi";
-import { sendTaskApprovalEmail } from "@/service/emailService";
+import { sendTaskApprovalEmail, sendTaskRespondConfirmationEmail, sendTaskRespondStatusEmail } from "@/service/emailService";
 import { status } from "@/utils/statusCodes";
 
 export type TaskAssignmentSchemaType = InferSelectModel<typeof taskAssignments>;
@@ -141,6 +141,13 @@ export default class TaskAssignmentService extends DrizzleService {
       const now = new Date();
       const assignment = await this.db.query.taskAssignments.findFirst({
         where: eq(taskAssignments.token, token),
+        with: {
+          task: {
+            with: {
+              creator: true
+            }
+          }
+        }
       });
 
       if (!assignment) {
@@ -174,6 +181,38 @@ export default class TaskAssignmentService extends DrizzleService {
         })
         .where(eq(taskAssignments.token, token))
         .returning();
+
+      // Send email notifications
+      if (assignment.task && assignment.task.creator && assignment.task.creator.email && assignment.assigneeEmail) {
+        const taskTitle = assignment.task.title;
+        const assigneeName = assignment.assigneeEmail;
+        const creatorEmail = assignment.task.creator.email;
+        const assigneeEmail = assignment.assigneeEmail;
+
+        // Email data for the creator
+        const creatorEmailData = {
+          recipientName: "Linky Task",
+          taskTitle,
+          taskDescription: assignment.task.description || '',
+          dueDate: assignment.expiresAt ? assignment.expiresAt.toISOString().split('T')[0] : '',
+          managerName: assigneeName,
+          reviewLink: `${process.env.APP_URL}/respond/${token}`,
+          status: newStatus
+        };
+
+        // Email data for the assignee - simple confirmation
+        const assigneeEmailData = {
+          recipientName: assigneeName,
+          taskTitle,
+          status: newStatus
+        };
+
+        // Send notification to creator
+        await sendTaskRespondStatusEmail(creatorEmail, creatorEmailData);
+
+        // Send confirmation to assignee
+        await sendTaskRespondConfirmationEmail(assigneeEmail, assigneeEmailData);
+      }
 
       return ServiceResponse.createResponse(
         status.HTTP_200_OK,

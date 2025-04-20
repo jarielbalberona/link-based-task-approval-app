@@ -10,7 +10,7 @@ export default async function Task({
   const { id } = await params;
   const cookieStore = await cookies();
 
-  const task = await getTaskAPI(id, undefined, {
+  const task = await getTaskAPI(id, {
     Cookie: await cookieStore.toString()
   });
 
@@ -21,17 +21,15 @@ export default async function Task({
   return (
     <>
       <main className="">
-        <div className="xl:pr-96">
           <div className="px-4 py-10 sm:px-6 lg:px-8 lg:py-6">
             <div className="container max-w-screen-lg px-4 mx-auto sm:px-6 lg:px-8">
               <div className="flex items-start space-x-4">
                 <div className="flex-1">
-                  <TaskCard data={task} />
+                  <TaskCard task={task} />
                 </div>
               </div>
             </div>
           </div>
-        </div>
       </main>
     </>
   );

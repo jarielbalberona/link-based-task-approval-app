@@ -25,6 +25,13 @@ interface TaskApprovalEmailData {
 	dueDate: string;
 	managerName: string;
 	reviewLink: string;
+	status?: 'approved' | 'rejected';
+}
+
+interface TaskRespondConfirmationData {
+	recipientName: string;
+	taskTitle: string;
+	status: 'approved' | 'rejected';
 }
 
 const sendEmail = async ({
@@ -71,13 +78,30 @@ const sendTaskApprovalEmail = async (
 	});
 };
 
-const sendTestTaskApprovalEmail = async (email: string, data?: TaskApprovalEmailData) => {
+const sendTaskRespondStatusEmail = async (
+	email: string,
+	data: TaskApprovalEmailData
+) => {
 	return sendEmail({
 		emailTo: email,
-		emailSubject: "Task Approval Request - Test",
-		template: "taskApprovalTemplateTest",
-		emailFrom: `Linky Task Approval <${process.env.RESEND_EMAIL_FROM}>`
+		emailSubject: `Task ${data.status}: ${data.taskTitle}`,
+		template: data.status === 'approved' ? 'taskApprovedTemplate' : 'taskRejectedTemplate',
+		data,
+		emailFrom: `Linky Task Response <${process.env.RESEND_EMAIL_FROM}>`
 	});
 };
 
-export { sendEmail, sendTaskApprovalEmail, sendTestTaskApprovalEmail };
+export async function sendTaskRespondConfirmationEmail(
+	to: string,
+	data: TaskRespondConfirmationData
+) {
+	return sendEmail({
+		emailTo: to,
+		emailSubject: `Task Response Confirmation - ${data.taskTitle}`,
+		template: "taskRespondConfirmationTemplate",
+		data,
+		emailFrom: `Linky Task Confirmation <${process.env.RESEND_EMAIL_FROM}>`
+	});
+}
+
+export { sendEmail, sendTaskApprovalEmail, sendTaskRespondStatusEmail };

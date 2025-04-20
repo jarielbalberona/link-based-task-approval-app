@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { appQueryClient } from "@/providers/react-query";
 
 const CreateEditTaskDialog = ({ task }: { task?: any }) => {
   const createTaskMutation = useCreateTask();
@@ -39,7 +40,10 @@ const CreateEditTaskDialog = ({ task }: { task?: any }) => {
 
     if (task) {
       updateTaskMutation.mutate({ id: task.id, ...taskForm }, {
-      onSuccess: () => toast.success("Task updated successfully")
+        onSuccess: () => {
+          toast.success("Task updated successfully");
+          appQueryClient.invalidateQueries({ queryKey: ["task", task.id] });
+      }
       });
     } else {
       createTaskMutation.mutate(taskForm, {
