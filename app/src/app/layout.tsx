@@ -1,6 +1,8 @@
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { cn } from "@/utils/ui";
-import { META_THEME_COLORS } from "@/config/site";
+import { siteConfig, META_THEME_COLORS } from "@/config/site";
+
 import "@/app/globals.css";
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -11,6 +13,19 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+export const metadata: Metadata = {
+  title: {
+    default: siteConfig.name,
+    template: `%s - ${siteConfig.name}`,
+  },
+  metadataBase: new URL(siteConfig.url),
+  description: siteConfig.description,
+};
+
+export const viewport: Viewport = {
+  themeColor: META_THEME_COLORS.light,
+};
 
 export default async function RootLayout({
   children,

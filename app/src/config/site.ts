@@ -1,7 +1,6 @@
 export const siteConfig = {
   name: "Linky Tasks",
-  url: "http://lbta-app.com/",
-  ogImage: "http://lbta-app.com/og.jpg",
+  url: "https://tasks.saltandsun.life/",
   description:
     "Linky Tasks is a task approval app that allows you to approve tasks from a link.",
   links: {
