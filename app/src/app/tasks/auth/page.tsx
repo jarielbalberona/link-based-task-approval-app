@@ -1,13 +1,22 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
 import AuthFormContent from "@/components/auth/content"
-
+import { useProfile } from "@/hooks/react-queries/auth";
+import { useRouter } from "next/navigation";
 export default function AuthPage() {
   const [defaultAuthTab, setDefaultAuthTab] = useState('signin')
-  // TODO: check if user is authenticated and redirect to home page
+    const router = useRouter();
+  const { data: profile } = useProfile();
+
+  useEffect(() => {
+  if (profile && profile?.id) {
+    router.push("/tasks")
+  }
+  }, [profile, router])
+
   return (
     <div className="flex flex-col flex-1 min-h-full px-6 py-12 mt-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
