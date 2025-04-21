@@ -11,11 +11,11 @@ export default async function TaskRespond({
   const { token } = await params;
   const cookieStore = await cookies();
 
-  const taskAssignment = await getTaskAssignmentByTokenAPI(token, undefined, {
+  const respond = await getTaskAssignmentByTokenAPI(token, undefined, {
     Cookie: await cookieStore.toString()
   });
 
-  if (!taskAssignment) {
+  if (!respond.data) {
     return <Card className="max-w-[600px] mx-auto overflow-hidden shadow-none border-none">
         <CardHeader className="py-5 text-center bg-primary">
           <h1 className="text-2xl font-normal text-primary-foreground">Task Not Found</h1>
@@ -25,7 +25,7 @@ export default async function TaskRespond({
         </CardContent>
       </Card>
   }
-
+  const taskAssignment = respond.data;
   const now = new Date();
   const expiresAt = new Date(taskAssignment.expiresAt);
 

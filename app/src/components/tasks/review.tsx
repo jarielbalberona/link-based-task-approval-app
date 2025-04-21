@@ -10,11 +10,14 @@ import {
 } from "@/components/ui/card";
 import { useUpdateTaskAssignmentStatusByToken } from "@/hooks/react-queries/tasks";
 import RespondedTaskDialog from "@/components/tasks/dialogs/responded-task";
+import LoadingOverlay from "@/components/ui/loading-overlay"
+import useCsrf from "@/hooks/use-csrf";
 
 export default function TaskReview({ data, token }: any) {
+  useCsrf()
   const [respondData, setRespondData] = useState(null);
-  const updateTaskAssignmentStatusByTokenMutation =
-    useUpdateTaskAssignmentStatusByToken();
+  const { mutate, isPending } = useUpdateTaskAssignmentStatusByToken();
+
   return (
     <>
       <Card className="max-w-[600px] mx-auto overflow-hidden shadow-none border-none">
@@ -66,7 +69,7 @@ export default function TaskReview({ data, token }: any) {
               variant="destructive"
               className="px-5 font-normal"
               onClick={() =>
-                updateTaskAssignmentStatusByTokenMutation.mutate(
+                mutate(
                   { token, status: "rejected" },
                   {
                     onSuccess: (data) => setRespondData(data),
@@ -80,7 +83,7 @@ export default function TaskReview({ data, token }: any) {
               variant="success"
               className="px-5 font-normal"
               onClick={() =>
-                updateTaskAssignmentStatusByTokenMutation.mutate({
+                mutate({
                   token,
                   status: "approved",
                 },
@@ -120,6 +123,7 @@ export default function TaskReview({ data, token }: any) {
         </CardFooter>
       </Card>
       <RespondedTaskDialog data={respondData} />
+      <LoadingOverlay isOpen={isPending} />
     </>
   );
 }

@@ -62,9 +62,23 @@ export const updateTaskAssignmentAPI = async (taskAssignment: any): Promise<any>
   return data.data || null;
 };
 
-export const getTaskAssignmentByTokenAPI = async (token: string, _queryContext?: any, headers?: any): Promise<any> => {
-  const { data } = await axiosInstance.get(`/tasks/assignment/${token}`, { headers });
-  return data.data || null
+export const getTaskAssignmentByTokenAPI =  async (token: string, _queryContext?: any, headers?: any): Promise<any> => {
+  try {
+    const response = await axiosInstance.get(`/tasks/assignment/${token}`, { headers });
+    const { data } = response;
+    return {
+      data: data.data || null,
+      status: response.status,
+      message: data.message || 'Success',
+    };
+  } catch (error: any) {
+    const errData = error.response?.data || {};
+    return {
+      data: null,
+      status: error.response?.status || 500,
+      message: errData.message || 'An error occurred',
+    };
+  }
 };
 
 export const updateTaskAssignmentStatusByTokenAPI = async (token: string, status: 'approved' | 'rejected'): Promise<any> => {
